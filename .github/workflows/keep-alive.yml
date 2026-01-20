@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Install dependencies
+    - name: keepalive
       run: |
         curl -X 'POST' 'https://suxichuan-mtranserver.hf.space/translate' \
             -H 'accept: application/json' \
