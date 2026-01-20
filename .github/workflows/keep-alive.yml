@@ -1,31 +1,34 @@
-name: keepaliving
+# 工作流名称
+name: 定时调用翻译接口
 
+# 触发条件：定时 + 手动触发（方便调试）
 on:
+  # 定时触发（UTC 时区，对应北京 9 点/21 点）
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: '0 */5 * * *'
+  # 手动触发（在 GitHub 页面点击「Run workflow」即可执行）
   workflow_dispatch:
 
-env:
-  TZ: Asia/Shanghai
-
+# 执行的任务
 jobs:
-  keep-alive:
+  translate-job:
+    # 运行环境：选择最新版 Ubuntu（GitHub 托管的虚拟机）
     runs-on: ubuntu-latest
-
+    # 任务步骤
     steps:
-    - name: keepaliving
-      run: |
-        curl -X 'POST' 'https://suxichuan-mtranserver.hf.space/translate' \
+      # 步骤1：拉取代码（执行 curl 无需代码，但这是默认步骤，建议保留）
+      - name: 拉取仓库代码
+        uses: actions/checkout@v4
+
+      # 步骤2：执行翻译接口调用
+      - name: 调用翻译API
+        run: |
+          # 开启严格模式，命令失败则工作流终止
+          set -euo pipefail
+          # 输出执行时间（便于排查）
+          echo "工作流执行时间（北京时间）：$(date -d '+8 hour')"
+          # 调用翻译接口
+          curl -X POST 'https://suxichuan-mtranserver.hf.space/translate' \
             -H 'accept: application/json' \
             -H 'Content-Type: application/json' \
             -d '{"from": "en","to": "zh-Hans","text": "hello","html": true}'
-
-  keepalive-workflow:
-    name: Keepalive Workflow
-    if: ${{ always() }}
-    needs: keep-alive
-    runs-on: ubuntu-latest
-    permissions:
-      actions: write
-    steps:
-      - uses: liskin/gh-workflow-keepalive@v1
