@@ -23,10 +23,6 @@ jobs:
       # 步骤2：执行翻译接口调用
       - name: 调用翻译API
         run: |
-          # 开启严格模式，命令失败则工作流终止
-          set -euo pipefail
-          # 输出执行时间（便于排查）
-          echo "工作流执行时间（北京时间）：$(date -d '+8 hour')"
           # 调用翻译接口
           curl -X POST 'https://suxichuan-mtranserver.hf.space/translate' \
             -H 'accept: application/json' \
