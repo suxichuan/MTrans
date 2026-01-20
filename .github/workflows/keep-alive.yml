@@ -1,0 +1,31 @@
+name: keepalive
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+env:
+  TZ: Asia/Shanghai
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install dependencies
+      run: |
+        curl -X 'POST' 'https://suxichuan-mtranserver.hf.space/translate' \
+            -H 'accept: application/json' \
+            -H 'Content-Type: application/json' \
+            -d '{"from": "en","to": "zh-Hans","text": "hello","html": true}'
+
+  keepalive-workflow:
+    name: Keepalive Workflow
+    if: ${{ always() }}
+    needs: keep-alive
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: liskin/gh-workflow-keepalive@v1
