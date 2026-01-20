@@ -1,4 +1,4 @@
-name: keepalive
+name: keepaliving
 
 on:
   schedule:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: keepalive
+    - name: keepaliving
       run: |
         curl -X 'POST' 'https://suxichuan-mtranserver.hf.space/translate' \
             -H 'accept: application/json' \
